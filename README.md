@@ -1,70 +1,38 @@
-# Getting Started with Create React App
+### CONVERSOR DE MONEDAS:
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Este conversor de monedas utiliza una API externa para obtener las tasas de cambio y realizar la conversión. Cuando se seleccionan las monedas de origen y destino, y se ingresa una cantidad, al hacer clic en el botón "Convertir", se llama a la API, se obtiene el resultado de la conversión y se muestra en la interfaz de usuario.
 
-## Available Scripts
+1. Se importan los módulos necesarios: React, useEffect, useState, y el archivo de hoja de estilos converter.css.
 
-In the project directory, you can run:
+2. Se define el componente Converter como una función. Este componente es un componente funcional, lo que significa que se utiliza la sintaxis de función en lugar de una clase para definir el componente.
 
-### `npm start`
+3. Se definen varios estados utilizando el hook useState. Los estados son variables que pueden almacenar datos y serán reactivos, lo que significa que cuando cambian, el componente se renderizará nuevamente. Los estados definidos son:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+monedas: Un array para almacenar las monedas obtenidas de la API.
+moneda1 y moneda2: Cadenas para almacenar las monedas seleccionadas en los selectores.
+monto: Una cadena para almacenar la cifra ingresada en el input.
+result: Una cadena para almacenar el resultado de la conversión.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+4. Se utilizan dos efectos (useEffect) para realizar acciones adicionales en el componente:
 
-### `npm test`
+El primer efecto se ejecuta cuando moneda1 cambia. Realiza una llamada a la API para obtener las monedas disponibles y las almacena en el estado monedas.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+El segundo efecto se ejecuta cuando moneda1 o moneda2 cambian. Resetea los valores de monto y result a una cadena vacía.
 
-### `npm run build`
+5. Se define la función handleConvert, que se ejecuta cuando se hace clic en el botón "Convertir". Esta función realiza una llamada a la API utilizando la moneda de origen (moneda1), la moneda de destino (moneda2) y la cantidad a convertir (monto). Luego, procesa la respuesta de la API y actualiza el estado result con el resultado de la conversión.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+6. En la URL de la llamada fetch, se utilizó https://${host}/latest?amount=${monto}&from=${moneda1}&to=${moneda2} para obtener los datos de conversión entre moneda1 y moneda2 con la cantidad monto.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+En el primer then, se verificó si la llamada fue exitosa usando resp.ok. Si no es exitosa, se lanza un error con el mensaje "Error: No se pudo obtener los datos.".
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+En el segundo then, se verifica si existen los datos necesarios (data, data.rates, y data.rates[moneda2]) para mostrar el resultado de la conversión. Si alguno de estos datos falta, se lanza un error con el mismo mensaje "Error: No se pudo obtener los datos.".
 
-### `npm run eject`
+En el bloque .catch, capturamos cualquier error que pueda ocurrir durante la llamada fetch o el procesamiento de la respuesta y establecemos el mensaje de error en el estado result.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### La interfaz contiene:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Un título <h1> con el texto "Money Converter".
+Dos selectores <select> para seleccionar las monedas de origen y destino. Los options se generan a partir de las monedas disponibles en el estado monedas.
+Un input <input> para ingresar la cantidad a convertir, cuyo valor está enlazado con el estado monto.
+Un párrafo <p> que muestra el resultado de la conversión con la moneda de destino (moneda2) y el valor almacenado en el estado result.
+Un botón <button> con el texto "Convertir", que al hacer clic ejecuta la función handleConvert.
